@@ -1,3 +1,6 @@
+Name: Chris Walker
+CS username: walker
+
 Welcome.
 
 You have sucessfully obtained a copy of the contents in the oracle repository.
