@@ -1,0 +1,8 @@
+(a) 2
+(b) It hasn't been modified since creation
+(c) No files were in the repository on 08/21/2015, the first commit was on     08/23/2015
+(d) None (unless you count creation a "modification", in that case, 1 each)
+(e) Git status shows the current state of the repository, git log shows past     commits.
+(f) git log --follow main.java
+(g) git log --grep='transaction'
+(h) git log --since '01/05/2016' --until '02/16/2016' --author='Lauren'
