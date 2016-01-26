@@ -2,10 +2,11 @@
  * WoodItem.cpp
  *
  *  Created on: Aug 24, 2015
- *      Author: USER
+ *      Author: Chris Walker
  */
 
 #include "WoodItem.h"
+
 /*
  * Empty constructor
  */
@@ -16,8 +17,7 @@ WoodItem::WoodItem() {
 }
 
 /*
- * Method to initialize a tic tac toe game
- * Initializes board and turn
+ * Full constructor to initialize type of wood, the base delivery time, and the price per board foot
  */
 WoodItem::WoodItem(std::string woodType, double deliveryTime, double itemPrice) {
 	type = woodType;
