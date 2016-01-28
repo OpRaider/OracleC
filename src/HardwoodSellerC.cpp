@@ -10,53 +10,41 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <vector>
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+
 #include "WoodItem.h"
 
 using namespace std;
 
 vector<WoodItem> woodTypes;
 
-/*
- * Main method
- * Gets valid user input, passes it to readInputFile
- */
-int main() {
-	
-	string userInput;
-	ifstream orderFile;
-
-	initWoodTypes();
-
-	while (cout << "Enter desired filename: " && getline(cin, userInput) {
-		orderFile.open(userInput.c_str(), in);
-
-		if (orderFile.is_open()) {
-			readInputFile(userInput, orderFile);
-			close(orderFile);
-			break;
-		}
-
-		cerr << "Invalid filename, try again.\n";
-	}
-
-	cout << "Press any key to exit..." << endl;
-	cin.get();
-	return 0;
-}
-
 void initWoodTypes() {
-	woodTypes.insert(new WoodItem("Cherry", 2.5, 5.95));
-	woodTypes.insert(new WoodItem("Curly Maple", 1.5, 6.00));
-	woodTypes.insert(new WoodItem("Genuine Mahogany", 3, 9.60));
-	woodTypes.insert(new WoodItem("Wenge", 5, 22.35));
-	woodTypes.insert(new WoodItem("White Oak", 2.3, 6.70));
-	woodTypes.insert(new WoodItem("Sawdust", 1, 1.50));
+	woodTypes.push_back(WoodItem("Cherry", 2.5, 5.95));
+	woodTypes.push_back(WoodItem("Curly Maple", 1.5, 6.00));
+	woodTypes.push_back(WoodItem("Genuine Mahogany", 3, 9.60));
+	woodTypes.push_back(WoodItem("Wenge", 5, 22.35));
+	woodTypes.push_back(WoodItem("White Oak", 2.3, 6.70));
+	woodTypes.push_back(WoodItem("Sawdust", 1, 1.50));
+}
+/*
+ * Method to compute the base deliveryTime
+ */
+double deliveryTime(int amount) {
+	if      (amount > 500)	return 5.5;
+	else if (amount > 400)	return 5;
+	else if (amount > 300)	return 4;
+	else if (amount > 200)	return 3;
+	else if (amount > 100)	return 2;
+	else					return 1;
 }
 
 /*
  * Method to read the input file
  */
-void readInputFile(string inputFilePath, ifstream orderFile) {
+void readInputFile(string inputFilePath, ifstream &orderFile) {
 
 	char ch = orderFile.get();
 
@@ -79,7 +67,7 @@ void readInputFile(string inputFilePath, ifstream orderFile) {
 	cout << endl;
 
 	// Skip date
-	while (ch != ';') {
+	while (ch != '\n') {
 		ch = orderFile.get();
 	}
 
@@ -93,13 +81,16 @@ void readInputFile(string inputFilePath, ifstream orderFile) {
 	// <Type2>:<Amount>
 	// Price: <Price>
 	// <etc...>
-	string type = "", amountString = "";
+	string type, amountString;
 	int amount;
-	int total = 0;
+	double total = 0;
 	double maxDeliveryTime = 0;
 
 	cout << "List of ordered wood:\n\n";
 	while (orderFile.good()) {
+		type = "";
+		amountString = "";
+
 		ch = orderFile.get();
 
 		// Print type
@@ -115,9 +106,12 @@ void readInputFile(string inputFilePath, ifstream orderFile) {
 			ch = orderFile.get();
 		}
 
-		amount = stoi(amountString); 
+		amount = atoi(amountString.c_str()); 
 
-		cout << type << ':' << amountString << "BF\nPrice: ";
+		if (*(amountString.end() - 1) == '\n')
+			amountString.erase(amountString.end() - 1);
+
+		cout << type << ": " << amountString << " BF\nPrice: $";
 
 		// Print subtotal price of type, add subtotal to total, and save max delivery time
 		for (int i = 0; i < woodTypes.size(); i++) {
@@ -132,18 +126,33 @@ void readInputFile(string inputFilePath, ifstream orderFile) {
 			}
 		}
 	}
-	cout << defaultfloat << "Estimated delivery time: " << maxDeliveryTime << " hours\n";
-	cout << setprecision(2) << fixed << "Total price: " << total << endl << endl;
+	cout.unsetf(ios_base::floatfield);
+	cout << "Estimated delivery time: " << maxDeliveryTime << " hours\n";
+	cout << setprecision(2) << fixed << "Total price: $" << total << endl << endl;
 }
 
 /*
- * Method to compute the deliveryTime
+ * Main method
+ * Gets valid user input, passes it to readInputFile
  */
-double deliveryTime(int amount) {
-	if      (amount > 500)	return 5.5;
-	else if (amount > 400)	return 5;
-	else if (amount > 300)	return 4;
-	else if (amount > 200)	return 3;
-	else if (amount > 100)	return 2;
-	else					return 1;
+int main() {
+	
+	string userInput;
+	ifstream orderFile;
+
+	initWoodTypes();
+
+	while (cout << "Enter desired filename: " && getline(cin, userInput)) {
+		orderFile.open(userInput.c_str(), ifstream::in);
+
+		if (orderFile.is_open()) {
+			readInputFile(userInput, orderFile);
+			orderFile.close();
+			break;
+		}
+
+		cerr << "Invalid filename, try again.\n";
+	}
+
+	return 0;
 }
